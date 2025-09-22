@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/riyadvr/pokedexcli/pokeapi"
 )
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*pokeapi.Config) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -23,16 +25,26 @@ func getCommands() map[string]cliCommand {
 			description: "Exit the Pokedex",
 			callback:    commandExit,
 		},
+		"map": {
+			name:        "map",
+			description: "Displays names of 20 location areas in the Pokemon world",
+			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Displays previous 20 location",
+			callback:    commandMapB,
+		},
 	}
 }
 
-func commandExit() error {
+func commandExit(cfg *pokeapi.Config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp() error {
+func commandHelp(cfg *pokeapi.Config) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println()

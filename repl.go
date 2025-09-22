@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/riyadvr/pokedexcli/pokeapi"
 )
 
 func startRepl() {
@@ -18,7 +20,7 @@ func startRepl() {
 			fmt.Println("Unknown Command")
 
 		} else {
-			if err := command.callback(); err != nil {
+			if err := command.callback(&pokeapi.Cfg); err != nil {
 				fmt.Println(err)
 			}
 		}
