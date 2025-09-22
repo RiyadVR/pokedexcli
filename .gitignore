@@ -1,3 +1,5 @@
 # .gitignore
 pokedexcli
 pokedexcli.exe
+
+repl.log
