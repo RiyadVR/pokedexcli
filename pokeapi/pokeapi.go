@@ -2,15 +2,25 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
+	"time"
+
+	"github.com/riyadvr/pokedexcli/pokecache"
 )
 
 type Config struct {
 	Next     *string
 	Previous *string
+	Client   Client
 }
 
 var Cfg Config
+
+type Client struct {
+	cache      pokecache.Cache
+	httpClient http.Client
+}
 
 type Location struct {
 	Count    int     `json:"count"`
@@ -22,26 +32,42 @@ type Location struct {
 	} `json:"results"`
 }
 
-func GetLocation(url string) (Location, error) {
-	res, err := http.Get(url)
+func NewClient(timeout, cacheInterval time.Duration) Client {
+	return Client{
+		cache:      pokecache.NewCache(cacheInterval),
+		httpClient: http.Client{Timeout: timeout},
+	}
+}
+
+func (c *Client) GetLocation(url string) (Location, error) {
+	var location Location
+
+	if val, ok := c.cache.Get(url); ok {
+		if err := json.Unmarshal(val, &location); err != nil {
+			return Location{}, err
+		}
+		return location, nil
+	}
+
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return Location{}, err
 	}
-	defer res.Body.Close()
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return Location{}, err
+	}
+	defer resp.Body.Close()
 
-	var location Location
-	decoder := json.NewDecoder(res.Body)
-	if err := decoder.Decode(&location); err != nil {
+	dat, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return Location{}, err
 	}
 
-	if location.Next != nil {
-		Cfg.Next = location.Next
-	}
+	c.cache.Add(url, dat)
 
-	if location.Previous != nil {
-		Cfg.Previous = location.Previous
+	if err := json.Unmarshal(dat, &location); err != nil {
+		return Location{}, err
 	}
-
 	return location, nil
 }

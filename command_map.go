@@ -14,7 +14,7 @@ func commandMap(cfg *pokeapi.Config) error {
 		url = "https://pokeapi.co/api/v2/location-area/"
 	}
 
-	location, err := pokeapi.GetLocation(url)
+	location, err := cfg.Client.GetLocation(url)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func commandMap(cfg *pokeapi.Config) error {
 
 func commandMapB(cfg *pokeapi.Config) error {
 	url := *cfg.Previous
-	location, err := pokeapi.GetLocation(url)
+	location, err := cfg.Client.GetLocation(url)
 	if err != nil {
 		return err
 	}

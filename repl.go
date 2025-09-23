@@ -5,12 +5,18 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/riyadvr/pokedexcli/pokeapi"
 )
 
 func startRepl() {
 	scanner := bufio.NewScanner(os.Stdin)
+	cfg := pokeapi.Config{
+		Client: pokeapi.NewClient(10*time.Second, 5*time.Second),
+	}
+	pokeapi.Cfg = cfg
+
 	for {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
