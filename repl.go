@@ -21,12 +21,14 @@ func startRepl() {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 		userInput := scanner.Text()
-		command, ok := getCommands()[userInput]
+		userCommand := strings.Fields(userInput)[0]
+		//provideArea := strings.Fields(userInput)[1]
+		command, ok := getCommands()[userCommand]
 		if !ok {
 			fmt.Println("Unknown Command")
 
 		} else {
-			if err := command.callback(&pokeapi.Cfg); err != nil {
+			if err := command.callback(&pokeapi.Cfg, userInput); err != nil {
 				fmt.Println(err)
 			}
 		}

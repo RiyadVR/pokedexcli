@@ -6,7 +6,7 @@ import (
 	"github.com/riyadvr/pokedexcli/pokeapi"
 )
 
-func commandMap(cfg *pokeapi.Config) error {
+func commandMap(cfg *pokeapi.Config, userInput string) error {
 	url := ""
 	if cfg.Next != nil {
 		url = *cfg.Next
@@ -31,7 +31,7 @@ func commandMap(cfg *pokeapi.Config) error {
 
 }
 
-func commandMapB(cfg *pokeapi.Config) error {
+func commandMapB(cfg *pokeapi.Config, userInput string) error {
 	url := *cfg.Previous
 	location, err := cfg.Client.GetLocation(url)
 	if err != nil {
