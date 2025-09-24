@@ -8,7 +8,7 @@ import (
 	"github.com/riyadvr/pokedexcli/pokeapi"
 )
 
-var PokemonCollection = make(map[string]pokeapi.PokemonInfo)
+var pokemonCollection = make(map[string]pokeapi.PokemonInfo)
 
 // func AppendPokemonCollection(pokemonName string) {
 // 	pokemonCollection[pokemonName] = pokeapi.PokemonInfo{Name: pokemonName}
@@ -36,6 +36,6 @@ func commandCatch(cfg *pokeapi.Config, userInput string) error {
 		return nil
 	}
 	fmt.Printf("%s was caught!\n", pokemonName)
-	PokemonCollection[pokemonName] = pokemonInfo
+	pokemonCollection[pokemonName] = pokemonInfo
 	return nil
 }
